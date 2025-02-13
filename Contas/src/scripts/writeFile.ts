@@ -51,8 +51,9 @@ export async function tryGetValuesInMonthAndYearFrame(month: string, year: strin
         }
 
         const fileReturn: fileReturn = JSON.parse(existingData);
-        const contas = fileReturn.contas.filter(c => c.Date.includes(month) && c.Date.includes(year));
+        const contas = fileReturn.contas.filter(c => c.Date.split("-")[1].includes(month) && c.Date.split("-")[0].includes(year));
 
+        console.log(fileReturn.contas[0].Date.split("-"));
         return contas;
     } catch (e) {
         console.error('Erro ao recuperar valores:', e);

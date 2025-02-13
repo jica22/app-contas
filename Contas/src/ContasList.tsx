@@ -39,7 +39,7 @@ export function ContasList() {
     let calculTotal = 0
     tryGetValuesInMonthAndYearFrame(month, year).then((thisContas) => {
       thisContas.map((c) => {
-        console.log(Number(c.Value))
+        // console.log(Number(c.Value))
         calculTotal += Number(c.Value)
       })
       setTotal(Number(calculTotal.toFixed(2)))
