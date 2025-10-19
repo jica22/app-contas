@@ -1,9 +1,12 @@
 import { Conta } from "@/types/conta";
+import * as XLSX from "xlsx";
 
 type fileReturn = {
     contas: Conta[]
     groups: string[]
 }
+
+type FileReturn = { contas: Conta[] };
 
 export async function addToContaFile(conta: Conta) {
     let contas: Conta[] = [];
@@ -59,6 +62,44 @@ export async function tryGetValuesInMonthAndYearFrame(month: string, year: strin
         console.error('Erro ao recuperar valores:', e);
         return [];
     }
+}
+
+export function exportAllToExcel(filename = "contas.xlsx") {
+    const existingData = localStorage.getItem("db");
+    if (!existingData) {
+        console.warn("Nada para exportar: localStorage 'db' vazio.");
+        return;
+    }
+
+    let parsed: FileReturn;
+    try {
+        parsed = JSON.parse(existingData);
+    } catch (e) {
+        console.error("JSON inválido em 'db':", e);
+        return;
+    }
+
+    const contas = parsed?.contas ?? [];
+    if (!Array.isArray(contas) || contas.length === 0) {
+        console.warn("Nenhuma conta para exportar.");
+        return;
+    }
+
+    const rows = contas.map((c) => ({
+        Data: c.Date,
+        Nome: c.Name,
+        Valor: Number(c.Value) < 0 ? `-R$${c.Value.replace("-", "")}` : `R$${c.Value}`,
+        Grupo: c.Group
+    }));
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(rows, { skipHeader: false });
+
+    XLSX.utils.sheet_add_aoa(ws, [["Data", "Nome", "Valor", "Grupo"]], { origin: "A1" });
+
+    XLSX.utils.book_append_sheet(wb, ws, "Contas");
+
+    XLSX.writeFile(wb, filename);
 }
 
 export async function getAllGroups(): Promise<string[]> {

@@ -1,3 +1,4 @@
+import { exportAllToExcel } from "../scripts/writeFile";
 import "../output.css";
 
 export interface Props {
@@ -13,6 +14,9 @@ export const Sidebar: React.FC<Props> = ({ onChange }) => {
             <button onClick={() => {
                 onChange(false)
             }} className="h-10 m-4 bg-gray-300 font-bold rounded-md p-2 hover:bg-white transition-all" >Ver contas</button>
+            <button onClick={() => {
+                exportAllToExcel()
+            }} className="h-10 m-4 bg-gray-300 font-bold rounded-md p-2 hover:bg-white transition-all" >Exportar contas para Excel</button>
         </div >
     );
 }
