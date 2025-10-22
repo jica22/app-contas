@@ -8,7 +8,7 @@ export function ContasList() {
 
   const today = new Date();
 
-  const [month, setMonth] = useState(today.getUTCMonth().toString())
+  const [month, setMonth] = useState((today.getMonth() + 1).toString())
   const [year, setYear] = useState(today.getFullYear().toString())
   const [contas, setContas] = useState<Conta[]>([])
   const [groups, setGroups] = useState<string[]>([])
